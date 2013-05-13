@@ -16,7 +16,7 @@
 module Text.Ascetic
   where
   
-import Data.String.Utils
+import Data.String.Utils (join)
 
 ----------------------------------------------------------------
 -- Data type for simple markup trees and class for data types
@@ -28,9 +28,10 @@ type Attribute = String
 type Value = String
 
 data Ascetic =
-    C Tag Content                        -- Content.
+    C Content                            -- Content.
   | E Tag [Ascetic]                      -- Element.
   | A Tag [(Attribute, Value)] [Ascetic] -- Element with attributes.
+  | L [Ascetic]                          -- Undelimited list.
   | D Tag [(Attribute, Value)] Ascetic   -- Declaration.
   deriving  (Eq)
 
@@ -41,32 +42,27 @@ class ToAscetic a where
 -- Conversion to ASCII string.
 
 instance Show Ascetic where
-  show x = to "" x where 
+  show x = to "" x where
+    showAVs avs = [a ++ "=\"" ++ v ++ "\"" | (a,v) <- avs]
     to ind x = case x of
-      C t c  -> ind ++ "<" ++ t ++ ">" ++ c ++ "</" ++ t ++ ">"
+      C c  -> c
       E t [] -> "<" ++ t ++ "/>"
       E t xs -> 
         ind 
         ++ "<" ++ t ++ ">\n" 
         ++ join "\n" [to (ind ++ "  ") x | x <- xs] 
         ++ "\n" ++ ind ++ "</" ++ t ++ ">"
-      A t avs [] ->
-        ind 
-        ++ "<" ++ t ++ " " 
-               ++ join " " [a ++ "=\"" ++ v ++ "\"" | (a,v) <- avs] 
-        ++ "/>" 
+      A t avs [] -> 
+        ind ++ "<" ++ t ++ " " ++ join " " (showAVs avs) ++ "/>"
       A t avs xs ->
         ind 
-        ++ "<" ++ t ++ " " 
-               ++ join " " [a ++ "=\"" ++ v ++ "\"" | (a,v) <- avs] 
-        ++ ">\n" 
+        ++ "<" ++ t ++ " " ++ join " " (showAVs avs) ++ ">\n" 
         ++ join "\n" [to (ind ++ "  ") x | x <- xs] 
         ++ "\n" ++ ind ++ "</" ++ t ++ ">"
+      L xs -> join "\n" [to ind x | x <- xs]
       D t avs x ->
         ind 
-        ++ "<?" ++ t ++ " " 
-                ++ join " " [a ++ "=\"" ++ v ++ "\"" | (a,v) <- avs] 
-        ++ "?>\n" 
+        ++ "<?" ++ t ++ " " ++ join " " (showAVs avs) ++ "?>\n" 
         ++ (to ind x)
 
 ----------------------------------------------------------------
