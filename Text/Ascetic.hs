@@ -45,22 +45,23 @@ instance Show Ascetic where
   show x = to "" x where
     showAVs avs = [a ++ "=\"" ++ v ++ "\"" | (a,v) <- avs]
     to ind x = case x of
-      C c  -> c
-      E t [] -> "<" ++ t ++ "/>"
-      E t xs -> 
+      C c           -> c
+      E t []        -> "<" ++ t ++ "/>"
+      E t [C c]     -> ind ++ "<" ++ t ++ ">" ++ c ++ "</" ++ t ++ ">"
+      E t xs        -> 
         ind 
         ++ "<" ++ t ++ ">\n" 
         ++ join "\n" [to (ind ++ "  ") x | x <- xs] 
         ++ "\n" ++ ind ++ "</" ++ t ++ ">"
-      A t avs [] -> 
-        ind ++ "<" ++ t ++ " " ++ join " " (showAVs avs) ++ "/>"
-      A t avs xs ->
+      A t avs []    -> ind ++ "<" ++ t ++ " " ++ join " " (showAVs avs) ++ "/>"
+      A t avs [C c] -> ind ++ "<" ++ t ++ " " ++ join " " (showAVs avs) ++ ">" ++ c ++ "</" ++ t ++ ">"
+      A t avs xs    ->
         ind 
         ++ "<" ++ t ++ " " ++ join " " (showAVs avs) ++ ">\n" 
         ++ join "\n" [to (ind ++ "  ") x | x <- xs] 
         ++ "\n" ++ ind ++ "</" ++ t ++ ">"
-      L xs -> join "\n" [to ind x | x <- xs]
-      D t avs x ->
+      L xs          -> join "\n" [to ind x | x <- xs]
+      D t avs x     ->
         ind 
         ++ "<?" ++ t ++ " " ++ join " " (showAVs avs) ++ "?>\n" 
         ++ (to ind x)
