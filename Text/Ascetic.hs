@@ -46,14 +46,14 @@ instance Show Ascetic where
     showAVs avs = [a ++ "=\"" ++ v ++ "\"" | (a,v) <- avs]
     to ind x = case x of
       C c           -> c
-      E t []        -> "<" ++ t ++ "/>"
+      E t []        -> "<" ++ t ++ ">" ++ "</" ++ t ++ ">"
       E t [C c]     -> ind ++ "<" ++ t ++ ">" ++ c ++ "</" ++ t ++ ">"
       E t xs        -> 
         ind 
         ++ "<" ++ t ++ ">\n" 
         ++ join "\n" [to (ind ++ "  ") x | x <- xs] 
         ++ "\n" ++ ind ++ "</" ++ t ++ ">"
-      A t avs []    -> ind ++ "<" ++ t ++ " " ++ join " " (showAVs avs) ++ "/>"
+      A t avs []    -> ind ++ "<" ++ t ++ " " ++ join " " (showAVs avs) ++ ">" ++ "</" ++ t ++ ">"
       A t avs [C c] -> ind ++ "<" ++ t ++ " " ++ join " " (showAVs avs) ++ ">" ++ c ++ "</" ++ t ++ ">"
       A t avs xs    ->
         ind 
