@@ -1,8 +1,9 @@
 ----------------------------------------------------------------
 --
--- Ascetic
+-- | Ascetic
 -- 
--- Text/Ascetic/HTML.hs
+-- @Text\/Ascetic\/HTML.hs@
+--
 --   Wrappers for building HTML file represented using the
 --   Ascetic data structure.
 
@@ -17,7 +18,7 @@ import Data.String.Utils (join)
 import qualified Text.Ascetic as A
 
 ----------------------------------------------------------------
--- Data structures specific to HTML files.
+-- | Data structures specific to HTML files.
 
 type Class = String
 type Selector = String
@@ -33,7 +34,7 @@ class ToHTML a where
   html :: a -> HTML
 
 ----------------------------------------------------------------
--- Combinators for assembling HTML files.
+-- | Combinators for assembling HTML files.
 
 file :: HTML -> HTML -> HTML
 file head body = A.E "html" [head, body]
@@ -91,8 +92,5 @@ conc hs = A.L hs
 
 bold :: HTML -> HTML
 bold h = A.E "b" [h]
-
-----------------------------------------------------------------
--- Other useful functions.
 
 --eof
