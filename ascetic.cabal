@@ -1,7 +1,7 @@
 Name:              ascetic
-Version:           0.0.0.3
+Version:           0.0.0.4
 Cabal-Version:     >= 1.6
-License:           GPL-3
+License:           MIT
 License-File:      LICENSE
 Synopsis:          Generic markup builder.
 Description:       Module for assembling/emitting files in any XML-like language.
