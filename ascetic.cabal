@@ -7,7 +7,7 @@ Synopsis:          Generic markup builder.
 Description:       Module for assembling/emitting files in any XML-like language.
 Category:          Text
 Author:            Andrei Lapets
-Maintainer:        Andrei Lapets <lapets@bu.edu>
+Maintainer:        Andrei Lapets <a@lapets.io>
 Build-Type:        Simple
 
 Library
